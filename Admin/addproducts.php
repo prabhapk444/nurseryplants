@@ -25,7 +25,7 @@
                 <select class="form-control" id="category" name="category" required>
                     <option value="indoor">Indoor</option>
                     <option value="outdoor">Outdoor</option>
-                    <option value="plant">Water</option>
+                    <option value="water">Water</option>
                     <option value="seeds">seeds</option>
                     <option value="plastic">Plastic</option>
                     <option value="ceramic">Ceramic</option>
