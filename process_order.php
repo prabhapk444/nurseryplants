@@ -36,7 +36,7 @@ if ($conn->query($sql) === TRUE) {
              . "Total Amount: $total_amount<br><br>"
              . "Thank you for shopping with us!<br><br>"
              . "Best Regards,<br>"
-             . "Your Nursery Plant";
+             . "Nursery Plant";
 
     $mail = new PHPMailer(true);
 
