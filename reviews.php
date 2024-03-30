@@ -77,21 +77,25 @@
 
         
         .video-container {
-        position: relative;
-        width: 100%;
-        padding-top: 56.25%;
-        overflow: hidden;
-        margin-top: 20px;
-    }
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; 
+    overflow: hidden;
+    margin-top: 20px;
+    border-radius: 10px; 
 
-    .video-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px; 
+}
+
         
     </style>
 </head>
@@ -130,12 +134,12 @@
         $conn->close();
     }
     ?>
-    <h1> Review</h1><br>
+    <h1> Review</h1><br>    
     <center>
         <h1> Nursery Plant</h1>
     </center><br>
     <div class="video-container">
-        <iframe src="./images/Indoor Plants _ Ep. 5 _ 5 Most Hard To Kill Plants _ nurserylive.mp4" frameborder="0" allowfullscreen></iframe>
+        <iframe src="./images/nurserylive.mp4" frameborder="0" allowfullscreen></iframe>
     </div><br><br>
 
     <main>
