@@ -17,7 +17,7 @@
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
         }
 
         h2 {
@@ -153,7 +153,8 @@
             <button type="submit">Submit</button>
         </form>
         <div class="update-link">
-            <a href="updateproduct.php">Go to Update Products</a>
+            <a href="updateproduct.php">Update </a><br><br>
+            <a href="view.php">View</a>
         </div>
     </div>
     <?php

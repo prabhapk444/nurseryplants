@@ -51,7 +51,6 @@
             <th>Number</th>
             <th>City</th>
             <th>Address</th>
-            <th>Confirm Address</th>
             <th>Pincode</th>
             <th>Delivery Date</th>
             <th>Total Amount</th>
@@ -64,7 +63,6 @@
                 echo "<td>" . $row['number'] . "</td>";
                 echo "<td>" . $row['city'] . "</td>";
                 echo "<td>" . $row['address'] . "</td>";
-                echo "<td>" . $row['confirmaddress'] . "</td>";
                 echo "<td>" . $row['pincode'] . "</td>";
                 echo "<td>" . $row['delivery'] . "</td>";
                 echo "<td>₹" . $row['total_amount'] . "</td>";

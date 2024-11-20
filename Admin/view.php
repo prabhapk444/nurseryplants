@@ -5,109 +5,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Products</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
+            max-width: 1200px;
+            margin: 40px auto;
+            background: #ffffff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .search-bar {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-bar input {
+            width: 50%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            outline: none;
+            font-size: 16px;
+            transition: box-shadow 0.3s;
+        }
+
+        .search-bar input:focus {
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
         }
 
         .product-card {
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: center;
+            background: #ffffff;
             border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            padding: 15px;
-            transition: transform 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .product-card:hover {
-            transform: scale(1.05);
+        .product-card.hidden {
+            display: none !important;
+        }
+
+
+        .product-image {
+            max-width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 15px;
         }
 
         .product-details {
-            flex: 1;
-            margin-right: 20px;
+            margin-bottom: 15px;
         }
 
         .product-details h5 {
             color: #007bff;
             margin-bottom: 10px;
+            font-size: 20px;
         }
 
         .product-details p {
-            margin-bottom: 8px;
-            color: #495057;
+            margin: 8px 0;
+            color: #555;
+            font-size: 14px;
         }
 
-        .product-image {
-            max-width: 250px;
-            max-height: 250px;
-            border-radius: 8px;
+        .delete-btn {
+            display: block;
+            padding: 12px 20px;
+            margin-top: 15px;
+            text-align: center;
+            color: #fff;
+            background-color: #d9534f;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
         }
 
-        @media screen and (max-width: 992px) {
-            .product-card {
-                flex-direction: column;
+        .delete-btn:hover {
+            background-color: #c9302c;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .search-bar input {
+                width: 80%;
             }
         }
     </style>
 </head>
 
-
 <body>
     <div class="container">
-        <center>
-            <h2>Product List</h2>
-        </center>
-        <?php
-        include("db.php");
+        <h2>Product List</h2>
 
-        $selectQuery = "SELECT product_name, category, type, price, quantity, description,image FROM products";
-        $result = $conn->query($selectQuery);
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search products..." onkeyup="filterProducts()">
+        </div>
 
-        if ($result === false) {
-            echo "Error retrieving data: " . $conn->error;
-        } else {
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo '<div class="product-card">';
-                    echo '<div class="product-details">';
-                    echo '<h5>' . $row["product_name"] . '</h5>';
-                    echo '<p><strong>Category:</strong> ' . $row["category"] . '</p>';
-                    echo '<p><strong>Type:</strong> ' . $row["type"] . '</p>';
-                    echo '<p><strong>Price:</strong> ' . $row["price"] . ' </p>';
-                    echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
-                    // echo '<p><strong>Availability:</strong> ' . $row["availability"] . '</p>';
-                    echo '<p><strong>description</strong> ' . $row["description"] . '</p>';
-                    echo '</div>';
-                    echo '<img src="./../nursery/uploads/' . basename($row["image"]) . '" alt="' . $row["product_name"] . '" class="product-image">';
+        <div class="product-list" id="product-list">
+            <?php
+            include("db.php");
 
-                    echo '</div>';
-                }
+            $selectQuery = "SELECT product_id, product_name, category, type, price, quantity, description, image FROM products";
+            $result = $conn->query($selectQuery);
+
+            if ($result === false) {
+                echo "Error retrieving data: " . $conn->error;
             } else {
-                echo "No records found in the products table.";
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<div class="product-card">';
+                        echo '<img src="./../nursery/uploads/' . basename($row["image"]) . '" alt="' . $row["product_name"] . '" class="product-image">';
+                        echo '<div class="product-details">';
+                        echo '<h5>' . $row["product_name"] . '</h5>';
+                        echo '<p><strong>Category:</strong> ' . $row["category"] . '</p>';
+                        echo '<p><strong>Type:</strong> ' . $row["type"] . '</p>';
+                        echo '<p><strong>Price:</strong> ₹' . $row["price"] . '</p>';
+                        echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
+                        echo '<p><strong>Description:</strong> ' . $row["description"] . '</p>';
+                        echo '</div>';
+                        echo '<button class="delete-btn" onclick="deleteProduct(' . $row["product_id"] . ')">Delete</button>';
+                        echo '</div>';
+                    }
+                } else {
+                    echo "<p>No products found.</p>";
+                }
+            }
+
+            $conn->close();
+            ?>
+        </div>
+    </div>
+
+    <script>
+        function filterProducts() {
+            const searchInput = document.getElementById("search").value.toLowerCase();
+            const products = document.getElementsByClassName("product-card");
+
+            for (let i = 0; i < products.length; i++) {
+                const productName = products[i].querySelector(".product-details h5").textContent.toLowerCase();
+                if (productName.includes(searchInput)) {
+                    products[i].classList.remove("hidden");
+                } else {
+                    products[i].classList.add("hidden");
+                }
             }
         }
 
-        $conn->close();
-        ?>
-    </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        function deleteProduct(productId) {
+            if (confirm("Are you sure you want to delete this product?")) {
+                window.location.href = `delete_product.php?id=${productId}`;
+            }
+        }
+    </script>
 </body>
 
 </html>
