@@ -247,7 +247,7 @@ $reviewCount = $result->fetch_assoc()['review_count'];
             </div>
             <ul>
                 <li><a href="users.php">Users</a></li>
-                <li><a href="products.php">Products</a></li>
+                <li><a href="addproducts.php">Products</a></li>
                 <li><a href="viewreviews.php">Reviews</a></li>
                 <li><a href="orders.php">Orders</a></li>
                 <li><a href="payments.php">Payments</a></li>

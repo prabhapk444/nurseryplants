@@ -4,64 +4,157 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
         .container {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #34495e;
+        }
+
+        label {
+            font-weight: bold;
+            color: #34495e;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #555;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+        }
+
+        button {
+            width: 100%;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .update-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .update-link a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .update-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            button {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            label {
+                font-size: 0.9rem;
+            }
+
+            input, select, textarea, button {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
-    <center><h2>Add Product</h2></center>
-    <div class="container mt-5">
+    <h2>Add Product</h2>
+    <div class="container">
         <form action="" method="post" enctype="multipart/form-data">
-            <div class="form-group mb-2">
+            <div class="form-group">
                 <label for="product_name">Product Name:</label>
-                <input type="text" class="form-control" id="product_name" name="product_name" required>
+                <input type="text" id="product_name" name="product_name" required>
             </div>
-            
-            <div class="form-group mb-2">
+            <div class="form-group">
                 <label for="category">Category:</label>
-                <select class="form-control" id="category" name="category" required>
+                <select id="category" name="category" required>
                     <option value="indoor">Indoor</option>
                     <option value="outdoor">Outdoor</option>
                     <option value="water">Water</option>
-                    <option value="seeds">seeds</option>
+                    <option value="seeds">Seeds</option>
                     <option value="plastic">Plastic</option>
                     <option value="ceramic">Ceramic</option>
                     <option value="trowel">Trowel</option>
-                    <option value="sprayer">sprayer</option>
+                    <option value="sprayer">Sprayer</option>
                     <option value="air">Air</option>
                     <option value="rose">Rose</option>
                 </select>
             </div>
-            <div class="form-group mb-2">
+            <div class="form-group">
                 <label for="type">Type:</label>
-                <select class="form-control" id="type" name="type" required>
+                <select id="type" name="type" required>
                     <option value="tools">Tools</option>
                     <option value="plants">Plants</option>
                 </select>
             </div>
-            <div class="form-group mb-2">
+            <div class="form-group">
                 <label for="description">Description:</label>
-                <textarea class="form-control" id="description" name="description"></textarea>
+                <textarea id="description" name="description"></textarea>
             </div>
-            <div class="form-group mb-2">
+            <div class="form-group">
                 <label for="price">Price:</label>
-                <div class="input-group">
-                    <input type="number" class="form-control" id="price" value="1.00" name="price" step="0.01" required>
-                </div>
+                <input type="number" id="price" value="1.00" name="price" step="0.01" required>
             </div>
             <div class="form-group">
                 <label for="quantity">Quantity:</label>
-                <input type="number" class="form-control" id="quantity" name="quantity" required>
+                <input type="number" id="quantity" name="quantity" required>
             </div>
-            <div class="form-group mb-2">
+            <div class="form-group">
                 <label for="image">Product Image:</label>
-                <input type="file" class="form-control-file" id="image" name="image">
+                <input type="file" id="image" name="image">
             </div>
-            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="submit">Submit</button>
         </form>
+        <div class="update-link">
+            <a href="updateproduct.php">Go to Update Products</a>
+        </div>
     </div>
     <?php
 

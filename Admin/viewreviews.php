@@ -1,6 +1,3 @@
-<?php
-    include("db.php");
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Reviews</title>
     <style>
-        
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f4f6f9;
@@ -17,9 +13,8 @@
             padding: 0;
         }
 
-    
         .table-container {
-            width: 100%;
+            width: 90%;
             max-width: 1200px;
             margin: 30px auto;
             padding: 20px;
@@ -28,7 +23,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-      
         table {
             width: 100%;
             border-collapse: collapse;
@@ -44,44 +38,38 @@
         th {
             background-color: #34495e;
             color: #fff;
-            font-size: 1.1rem;
-        }
-
-        td {
             font-size: 1rem;
         }
 
-      
+        td {
+            font-size: 0.9rem;
+            word-wrap: break-word;
+        }
+
         tr:hover {
             background-color: #f2f2f2;
         }
 
-  
-        @media only screen and (max-width: 600px) {
-            th, td {
-                display: block;
-                width: 100%;
-                text-align: right;
-                padding: 10px;
-            }
+        .delete-button {
+            color: #fff;
+            background-color: #e74c3c;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
 
-            th {
-                background-color: #34495e;
-                color: #fff;
-                font-size: 1.1rem;
-                text-align: center;
-            }
-
-            td {
-                text-align: left;
-            }
+        .delete-button:hover {
+            background-color: #c0392b;
         }
 
         .back-button {
             display: inline-block;
             padding: 10px 20px;
             margin-top: 20px;
-            margin-left:30px;
+            margin-left: 5%;
             background-color: #3498db;
             color: #fff;
             text-decoration: none;
@@ -99,6 +87,7 @@
 <body>
 
 <?php
+include("db.php");
     $selectQuery = "SELECT id, name, email, command, ratings, created_at FROM user_reviews";
     $result = $conn->query($selectQuery);
     if ($result === false) {
@@ -107,7 +96,7 @@
         if ($result->num_rows > 0) {
             echo "<div class='table-container'>";
             echo "<table>";
-            echo "<tr><th>ID</th><th>Name</th><th>Email</th><th>Command</th><th>Ratings</th><th>Created At</th></tr>";
+            echo "<tr><th>ID</th><th>Name</th><th>Email</th><th>Command</th><th>Ratings</th><th>Action</th></tr>";
 
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
@@ -116,7 +105,7 @@
                 echo "<td>" . $row["email"] . "</td>";
                 echo "<td>" . $row["command"] . "</td>";
                 echo "<td>" . $row["ratings"] . "</td>";
-                echo "<td>" . $row["created_at"] . "</td>";
+                echo "<td><a class='delete-button' href='delete_reviews.php?delete_id=" . $row["id"] . "' onclick=\"return confirm('Are you sure you want to delete this review?');\">Delete</a></td>";
                 echo "</tr>";
             }
 
@@ -129,7 +118,6 @@
 
     $conn->close();
 ?>
-
 
 <a href="dashboard.php" class="back-button">Back</a>
 
