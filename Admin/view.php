@@ -74,7 +74,7 @@
         <?php
         include("db.php");
 
-        $selectQuery = "SELECT product_name, category, type, price, quantity, availability, description,image FROM products";
+        $selectQuery = "SELECT product_name, category, type, price, quantity, description,image FROM products";
         $result = $conn->query($selectQuery);
 
         if ($result === false) {
@@ -89,7 +89,7 @@
                     echo '<p><strong>Type:</strong> ' . $row["type"] . '</p>';
                     echo '<p><strong>Price:</strong> ' . $row["price"] . ' </p>';
                     echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
-                    echo '<p><strong>Availability:</strong> ' . $row["availability"] . '</p>';
+                    // echo '<p><strong>Availability:</strong> ' . $row["availability"] . '</p>';
                     echo '<p><strong>description</strong> ' . $row["description"] . '</p>';
                     echo '</div>';
                     echo '<img src="./../nursery/uploads/' . basename($row["image"]) . '" alt="' . $row["product_name"] . '" class="product-image">';

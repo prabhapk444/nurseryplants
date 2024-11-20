@@ -184,7 +184,7 @@ info@nurseryplant.com <br>
 
     <div class="copyright">
       © 2024 Copyright:
-      <a href="#" style="text-decoration: none;"> Nursery Plant</a>
+      <a href="home.php" style="text-decoration: none;"> Nursery Plant</a>
     </div>
   </footer>
 </body>

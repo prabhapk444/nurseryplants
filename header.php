@@ -499,7 +499,6 @@ section {
     <div class="container">
       <input type="checkbox" name="check" id="check">
       <div class="logo-container">
-        <h3 class="logo">Nursery<span>Plant</span></h3>
       </div>
 
       <div class="nav-btn">
@@ -628,9 +627,6 @@ section {
             </li>
             <li class="nav-link" style="--i: 1.35s">
               <a href="contact.php">Contact</a>
-            </li>
-             <li class="nav-link" style="--i:1.35s">
-             <a href="rewards.php">Rewards</a>
             </li>
           </ul>
         </div>

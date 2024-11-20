@@ -46,7 +46,7 @@ if ($conn->query($sql) === TRUE) {
         $mail->Host = 'smtp.gmail.com';       
         $mail->SMTPAuth = true;
         $mail->Username = 'karanprabha22668@gmail.com'; 
-        $mail->Password = 'hrmq uoyw zory obcg';
+        $mail->Password = 'oiod fddv antx pkhd';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
         $mail->Port = 587;                       
 

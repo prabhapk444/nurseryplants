@@ -66,7 +66,7 @@
         <?php
             include("db.php");
 
-            $selectQuery = "SELECT product_id, product_name, category, type, price, quantity, availability FROM products";
+            $selectQuery = "SELECT product_id, product_name, category, type, price, quantity FROM products";
             $result = $conn->query($selectQuery);
 
             if ($result === false) {
@@ -82,7 +82,6 @@
                     echo '<th>Type</th>';
                     echo '<th>Price (&#8377;)</th>';
                     echo '<th>Quantity</th>';
-                    echo '<th>Availability</th>';
                     echo '</tr>';
                     echo '</thead>';
                     echo '<tbody>';
@@ -95,7 +94,6 @@
                         echo '<td>' . $row["type"] . '</td>';
                         echo '<td>' . $row["price"] . '</td>';
                         echo '<td>' . $row["quantity"] . '</td>';
-                        echo '<td>' . $row["availability"] . '</td>';
                         echo '</tr>';
                     }
 

@@ -1,4 +1,5 @@
 <?php
+include("db.php");
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,193 +23,173 @@ include("header.php");
 </center>
 
 <?php
-include("db.php");
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
+    $product_id = filter_var($_POST['product_id'], FILTER_VALIDATE_INT);
+    $quantity = filter_var($_POST['quantity'], FILTER_VALIDATE_INT);
+
+    if (!$product_id || !$quantity || $quantity <= 0) {
+        handleError("Invalid product or quantity.");
+    }
+    $user_id = $_SESSION['user_id'];
+
+    $checkCartStmt = $conn->prepare("SELECT quantity FROM cart WHERE user_id = ? AND product_id = ? AND status = 1");
+    $checkCartStmt->bind_param("ii", $user_id, $product_id);
+    $checkCartStmt->execute();
+    $checkResult = $checkCartStmt->get_result();
+
+    if ($checkResult && $checkResult->num_rows > 0) {
+        $existingItem = $checkResult->fetch_assoc();
+        $existingQuantity = $existingItem['quantity'];
+        $newQuantity = $existingQuantity + $quantity;
+        $stmt = $conn->prepare("SELECT quantity FROM products WHERE product_id = ?");
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $row = $result->fetch_assoc()) {
+            $availableQuantity = (int)$row['quantity'];
+
+            if ($newQuantity > $availableQuantity) {
+                handleError("Insufficient stock for the product.");
+            }
+            $updateCartStmt = $conn->prepare("UPDATE cart SET quantity = ?, amount = ? WHERE user_id = ? AND product_id = ?");
+            $amount = $newQuantity * floatval(preg_replace('/[^\d.]/', '', $row['price'])); 
+            $updateCartStmt->bind_param("iiis", $newQuantity, $amount, $user_id, $product_id);
+
+            if ($updateCartStmt->execute()) {
+                echo "<script>
+                    Swal.fire({
+                        title: 'Cart Updated',
+                        text: 'Your cart has been updated with the new quantity.',
+                        icon: 'success'
+                    })
+                </script>";
+            } else {
+                handleError("Failed to update cart.");
+            }
+        }
+    } else {
+        $stmt = $conn->prepare("SELECT price, product_name, quantity FROM products WHERE product_id = ?");
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $row = $result->fetch_assoc()) {
+            $price = floatval(preg_replace('/[^\d.]/', '', $row['price']));
+            $availableQuantity = (int)$row['quantity'];
+            $product_name = $row['product_name'];
+
+            if ($quantity > $availableQuantity) {
+                handleError("Insufficient stock for $product_name.");
+            }
+
+            $amount = $quantity * $price; 
+
+            $insertCartStmt = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity, amount, status) VALUES (?, ?, ?, ?, 1)");
+            $insertCartStmt->bind_param("iiis", $user_id, $product_id, $quantity, $amount);
+
+            if ($insertCartStmt->execute()) {
+                $updateProductStmt = $conn->prepare("UPDATE products SET quantity = quantity - ? WHERE product_id = ?");
+                $updateProductStmt->bind_param("ii", $quantity, $product_id);
+                if ($updateProductStmt->execute()) {
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Added to Cart',
+                            text: '$product_name has been added to your cart.',
+                            icon: 'success'
+                        })
+                    </script>";
+                } else {
+                    handleError("Failed to update product stock.");
+                }
+            } else {
+                handleError("Failed to add product to the cart.");
+            }
+        } else {
+            handleError("Product not found.");
+        }
+    }
+}
+
+function handleError($message) {
+    echo "<script>
+        Swal.fire({
+            title: 'Error',
+            text: '$message',
+            icon: 'error',
+        });
+    </script>";
+    exit;
+}
 
 
+if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+    die("User not logged in. Please log in to view your cart.");
+}
 
-$sql = "SELECT id FROM register";
+$user_id = $_SESSION['user_id'];
 
+$selectQuery = "
+SELECT
+    c.cart_id,
+    p.category,
+    c.amount,
+    p.type,
+    r.Username AS user_name,
+    p.product_id,
+    p.image,
+    p.product_name AS product_name,
+    c.quantity AS quantity,
+    p.price AS price,  
+    p.description
+FROM
+    cart c
+JOIN
+    register r ON c.user_id = r.id
+JOIN
+    products p ON c.product_id = p.product_id
+WHERE
+    c.user_id = '$user_id' AND c.status = 1;";
 
-$result = $conn->query($sql);
+$result = $conn->query($selectQuery);
 if ($result === false) {
-    echo "Error: " . $conn->error;
+    echo "Error retrieving data: " . $conn->error;
 } else {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $id = $row['id'];
+            echo '<div class="product-card">';
+            echo '<div class="product-details">';
+            echo '<form action="order.php" method="post">';
+            echo '<h5>' . $row["product_name"] . '</h5>';
+            echo '<p><strong>Category:</strong> ' . $row["category"] . '</p>';
+            echo '<p><strong>Type:</strong> ' . $row["type"] . '</p>';
+            echo '<p><strong>Price:</strong> ' . $row["price"] . ' </p>';
+            echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
+            echo '<p><strong>Description:</strong> ' . $row["description"] . '</p>';
+            echo '<p><strong>Total amount:</strong> ₹<strong><span name="totalAmount">' . $row["amount"] . '</span></strong></p>';
+            echo '<input type="hidden" name="productId" value="' . $row['product_id'] . '">';
+            echo '<input type="hidden" name="productName" value="' . $row['product_name'] . '">';
+            echo '<input type="hidden" name="totalAmount" value="' . $row['amount'] . '">';
+            echo '<button type="submit" class="btn btn-success">Order Now</button>';
+            echo '</form>';
+            echo '<form action="delete_from_cart.php" method="post">';
+            echo '<input type="hidden" name="cart_id" value="' . $row['cart_id'] . '">';
+            echo '<button type="submit" class="btn btn-danger">Delete</button>';
+            echo '</form>';
+    
+            echo '</div>';
+            echo '<img src="./nursery/uploads/' . basename($row["image"]) . '" alt="' . $row["product_name"] . '" class="product-image">';
+            echo '</div>';
         }
     } else {
-        echo "No rows found.";
+        echo "No records found in the cart.";
     }
+    
 }
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
-
-    $product_id = (int)$_POST['product_id']; 
-    $query = "SELECT price, product_name, quantity FROM products WHERE product_id = $product_id";
-    
-    $result = $conn->query($query);
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $product_name = $row['product_name'];
-        $username = $_SESSION['username'];
-        
-        $price = (float)preg_replace("/[^0-9.]/", "", $row['price']);
-        $quantity = (int)$_POST['quantity']; 
-        $amount = $quantity * $price;
-    
-        $formatted_amount = "₹" . number_format($amount, 2);
-    
-        echo "<script>
-            Swal.fire({
-                title: 'Sale Completed',
-                text: 'Your sale has been successfully processed!',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                html: `You added ${product_name} to your cart for ${formatted_amount} total products for ${quantity}.`,
-            });
-        </script>";
-    
-        // Inserting payment details into the payment table
-        $insertPaymentQuery = "INSERT INTO payment (name, quantity, rate, amount, status) 
-                               VALUES ('$username', $quantity, $price, '$formatted_amount', 'success')";
-        $paymentResult = $conn->query($insertPaymentQuery);
-    
-        if (!$paymentResult) {
-            echo "Error recording payment: " . $conn->error;
-        }
-    
-        // Updating the products table to reduce the available quantity
-        $availableQuantity = (int)$row['quantity'];
-        $updatedQuantity = $availableQuantity - $quantity;
-        $updateProductQuery = "UPDATE products SET quantity = $updatedQuantity WHERE product_id = $product_id";
-        $productUpdateResult = $conn->query($updateProductQuery);
-    
-        if (!$productUpdateResult) {
-            echo "Error updating products table: " . $conn->error . "<br>";
-        }
-    } else {
-        echo "No product found for the given ID.";
-    }
-    
-} else {
-    echo "Invalid request.";
-}
-
-
-
-    include("db.php");
-$sql = "SELECT price FROM products WHERE product_id= $product_id";
-$res= $conn->query($sql);
-if ($res) {
-    $row = $res->fetch_assoc();
-    
-    if ($row) {
-    } else {
-       
-        echo "Product not found.";
-    }
-} else {
-    
-    echo "Error executing query: " . $conn->error;
-}
-$checkQuery = "SELECT * FROM cart WHERE user_id = '$id' AND product_id = $product_id AND status = 1";
-$checkResult = $conn->query($checkQuery);
-
-
-if ($checkResult->num_rows > 0) {
-    $updateQuery = "UPDATE cart SET quantity = quantity + $quantity,
-                       amount = amount + ($quantity * $price)
-                    WHERE user_id = '$id' AND product_id = $product_id AND status = 1";
-    $updateResult = $conn->query($updateQuery);
-
-    if ($updateResult) {
-    } else {
-        echo "Error updating cart: " . $conn->error . "<br>";
-    }
-
-    $updateProductQuery = "UPDATE products SET quantity = quantity - $quantity WHERE product_id = $product_id";
-    $productUpdateResult = $conn->query($updateProductQuery);
-
-    if ($productUpdateResult) {
-       
-    } else {
-        echo "Error updating products table: " . $conn->error . "<br>";
-    }
-} else {
-    $insertQuery = "INSERT INTO cart (user_id, product_id, quantity, amount, status)
-                    VALUES ('$id', $product_id, $quantity, $amount, 1)";
-    $insertResult = $conn->query($insertQuery);
-
-    if ($insertResult) {
-    } else {
-        echo "Error inserting new item into cart: " . $conn->error . "<br>";
-    }
-}
- 
-
-?>
- <?php
- include("db.php");
- $name=$_SESSION['username'];
-
-        $selectQuery = "
-        SELECT
-            c.cart_id,
-            p.category,
-            c.amount,
-            p.type,
-            r.Username AS user_name,
-            p.product_id,
-            p.image,
-            p.product_name AS product_name,
-            c.quantity AS quantity,
-            p.price AS price,  
-            p.description
-        FROM
-            cart c
-        JOIN
-            register r ON c.user_id = r.id
-        JOIN
-            products p ON c.product_id = p.product_id
-        WHERE
-            c.user_id = '$id' AND c.status = 1;";
-        $result = $conn->query($selectQuery);
-        if ($result === false) {
-            echo "Error retrieving data: " . $conn->error;
-        } else {
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo '<div class="product-card">';
-                    echo '<div class="product-details">';
-                    echo '<form action="order.php" method="post">';
-                    echo '<h5>' . $row["product_name"] . '</h5>';
-                    echo '<p><strong>Category:</strong> ' . $row["category"] . '</p>';
-                    echo '<p><strong>Type:</strong> ' . $row["type"] . '</p>';
-                    echo '<p><strong>Price:</strong> ' . $row["price"] . ' </p>';
-                    echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
-                    echo '<p><strong>description</strong> ' . $row["description"] . '</p>';
-                    echo '<p><strong>Total amount:</strong>₹<strong><span name="totalAmount">' . $row["amount"] . '</span></strong></p>';
-                    echo '<input type="hidden" name="productId" value="' . $row['product_id'] . '">';
-                    echo '<input type="hidden" name="productName" value="' . $row['product_name'] . '">';
-                    echo '<input type="hidden" name="totalAmount" value="' . $row['amount'] . '">';
-                    echo '<button type="submit" class="btn btn-success">Order Now</button>';
-                    echo '</div>';
-                    echo '<img src="./nursery/uploads/' . basename($row["image"]) . '" alt="' . $row["product_name"] . '" class="product-image">';
-                    echo '</div>';
-                }
-            } else {
-                echo "No records found in the products table.";
-            }
-        }
-     
-
-        $conn->close();
+$conn->close();
         ?>
  
-
-
-
-
 <?php
 include("footer.php");
 ?>

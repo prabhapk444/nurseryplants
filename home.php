@@ -7,7 +7,6 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -86,7 +85,7 @@
 <?php
     include("db.php");
 
-    $selectQuery = "SELECT product_name, category, price, quantity, availability, description, image, product_id FROM products WHERE category ='air' ORDER BY RAND() LIMIT 2";
+    $selectQuery = "SELECT product_name, category, price, quantity,  description, image, product_id FROM products WHERE category ='air' ORDER BY RAND() LIMIT 2";
     $result = $conn->query($selectQuery);
 
     if ($result === false) {
@@ -104,7 +103,6 @@
                 echo '<p class="card-text"><strong>Price:</strong> ' . $row["price"] . '</p>';
                 echo '<p class="card-text"><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
                 echo '<p class="card-text"><strong>Description:</strong> ' . $row["description"] . '</p>';
-                echo '<button class="btn btn-success view_prod" data-id="' . $row['product_id'] . '">Id Number</button>';
                 echo '<form method="post" action="add_to_cart.php" class="mt-3">';
                 echo '<input type="hidden" name="product_id" value="' . $row['product_id'] . '">';
                 echo '<input type="hidden" name="product_name" value="' . $row['product_name'] . '">';
@@ -240,21 +238,5 @@
    
 
     <?php include("footer.php"); ?>
-    <script>
-        $(document).ready(function() {
-            $('.view_prod').click(function() {
-                var productId = $(this).data('id');
-                var productName = $(this).closest('.product-card').find('h5').text();
-                Swal.fire({
-                    title: productName,
-                    html: '<p><strong>Product ID:</strong> ' + productId + '</p>',
-                    icon: 'info',
-                    confirmButtonText: 'Close'
-                });
-            });
-
-            
-        });
-    </script>
     </body>
 </html>

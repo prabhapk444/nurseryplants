@@ -56,10 +56,6 @@
                 <input type="number" class="form-control" id="quantity" name="quantity" required>
             </div>
             <div class="form-group mb-2">
-                <label for="availability">Availability:</label>
-                <input type="number" class="form-control" id="availability" name="availability" required>
-            </div>
-            <div class="form-group mb-2">
                 <label for="image">Product Image:</label>
                 <input type="file" class="form-control-file" id="image" name="image">
             </div>
@@ -80,7 +76,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = $_POST["description"];
     $price = '₹' . $_POST["price"];
     $quantity = $_POST["quantity"];
-    $availability = $_POST["availability"];
 
     if ($_FILES["image"]["name"] != "") {
         $rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -97,19 +92,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $updateQuery = "UPDATE products SET 
                         product_name = ?, category = ?, type = ?, description = ?, 
-                        price = ?, quantity = ?, availability = ?, image = ?
+                        price = ?, quantity = ?,image = ?
                         WHERE product_id = ?";
 
         $stmt = mysqli_prepare($conn, $updateQuery);
-        mysqli_stmt_bind_param($stmt, "ssssssssi", $productName, $category, $type, $description, $price, $quantity, $availability, $targetFile, $productId);
+        mysqli_stmt_bind_param($stmt, "sssssssi", $productName, $category, $type, $description, $price, $quantity, $availability, $targetFile, $productId);
     } else {
         $updateQuery = "UPDATE products SET 
                         product_name = ?, category = ?, type = ?, description = ?, 
-                        price = ?, quantity = ?, availability = ?
+                        price = ?, quantity = ?,
                         WHERE product_id = ?";
 
         $stmt = mysqli_prepare($conn, $updateQuery);
-        mysqli_stmt_bind_param($stmt, "sssssssi", $productName, $category, $type, $description, $price, $quantity, $availability, $productId);
+        mysqli_stmt_bind_param($stmt, "ssssssi", $productName, $category, $type, $description, $price, $quantity, $availability, $productId);
     }
 
     $result = mysqli_stmt_execute($stmt);

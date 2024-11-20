@@ -9,90 +9,141 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <style>
-        * {
-            font-family: 'Roboto', sans-serif;
-            box-sizing: border-box;
-        }
+     * {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+}
 
-        body {
-            background-color: #fffffe;
-            margin: 0;
-            padding: 0;
-        }
+body {
+    background-color: #fffffe;
+    margin: 0;
+    padding: 0;
+}
 
-        h3 {
-            text-align: center;
-            color: #272343;
-            margin-top: 20px; 
-        }
+h3 {
+    text-align: center;
+    color: #272343;
+    margin-top: 20px;
+    font-size: 1.5rem;
+}
 
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center; 
-            margin-top: 20px; 
-        }
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; 
+    margin-top: 20px;
+    padding: 10px;
+}
 
-        .form {
-            max-width: 540px;
-            width: 100%;
-            padding: 20px;
-            box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            transition: background-color 0.5s ease-in-out, border 0.5s ease-in-out;
-            border: 2px solid white;
-        }
-
-        .label {
-            color: #2b2c34;
-            margin-bottom: 4px;
-            font-weight: bold;
-            text-align: left;
-            display: block; 
-        }
-
-        .input {
-            padding: 10px;
-            margin-bottom: 20px;
-            width: 100%;
-            font-size: 1rem;
-            color: #4a5568;
-            outline: none;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .input:focus {
-            background-color: #fff;
-            box-shadow: 0 0 0 2px #cbd5e0;
-        }
-
-        .input:valid {
-            border: 1px solid green;
-        }
-
-        .input:invalid {
-            border: 1px solid rgba(14, 14, 14, 0.205);
-        }
+.form {
+    max-width: 540px;
+    width: 100%;
+    padding: 30px;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    transition: background-color 0.5s ease-in-out, border 0.5s ease-in-out;
+    border: 2px solid #dcdcdc; 
+    background-color: #ffffff;
+}
 
 
-        .form p {
-            color: #2b2c34;
-            margin-top: 10px;
-            font-weight: bold;
-        }
+.label {
+    color: #2b2c34;
+    margin-bottom: 4px;
+    font-weight: bold;
+    text-align: left;
+    display: block;
+}
 
-        @media screen and (max-width: 768px) {
-            .container {
-                flex-direction: column; 
-                align-items: center; 
-            }
 
-            .form {
-                max-width: 90%; 
-            }
-        }
+.input {
+    padding: 12px;
+    margin-bottom: 20px;
+    width: 100%;
+    font-size: 1rem;
+    color: #4a5568;
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+}
+
+
+.input:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 3px #cbd5e0;
+    border: 1px solid #a0aec0;
+}
+
+
+.input:valid {
+    border: 1px solid green;
+}
+
+
+.input:invalid {
+    border: 1px solid rgba(14, 14, 14, 0.205);
+}
+
+
+.form p {
+    color: #2b2c34;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+
+@media screen and (max-width: 1024px) {
+    .form {
+        padding: 25px; 
+        max-width: 90%;
+    }
+
+    h3 {
+        font-size: 1.25rem; 
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 20px; 
+    }
+
+    .form {
+        padding: 20px;
+        max-width: 100%; 
+    }
+
+    .input {
+        font-size: 0.95rem; 
+    }
+
+    h3 {
+        font-size: 1.125rem; 
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .form {
+        padding: 15px;
+        max-width: 100%; 
+    }
+
+    .input {
+        font-size: 0.9rem;
+    }
+
+    h3 {
+        font-size: 1rem; 
+    }
+
+    .label {
+        font-size: 0.9rem;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -158,7 +209,6 @@
             processData: false,
             contentType: false,
             success: function(response) {
-               
                 Swal.fire({
                     icon: 'success',
                     title: 'Payment Successful',

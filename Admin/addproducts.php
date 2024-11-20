@@ -57,10 +57,6 @@
                 <input type="number" class="form-control" id="quantity" name="quantity" required>
             </div>
             <div class="form-group mb-2">
-                <label for="availability">Availability:</label>
-                <input type="number" class="form-control" id="availability" name="availability" required>
-            </div>
-            <div class="form-group mb-2">
                 <label for="image">Product Image:</label>
                 <input type="file" class="form-control-file" id="image" name="image">
             </div>
@@ -78,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = $_POST["description"];
     $price = '₹' . $_POST["price"]; 
     $quantity = $_POST["quantity"];
-    $availability = $_POST["availability"];
 
  
     $rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -95,11 +90,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile);
 
-    $sql = "INSERT INTO products (product_name, category, type, description, price, quantity, availability, image)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO products (product_name, category, type, description, price, quantity,image)
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ssssssss",$productName, $category, $type, $description, $price, $quantity, $availability, $targetFile);
+    mysqli_stmt_bind_param($stmt, "ssssssss",$productName, $category, $type, $description, $price, $quantity,$targetFile);
     $result = mysqli_stmt_execute($stmt);
 
     if ($result) {

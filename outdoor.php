@@ -14,15 +14,15 @@
 <body>
     <?php
     include("header.php");
-    ?>
+    ?><br>
     <center>
         <h2>Product List</h2>
-    </center>
+    </center><br>
 
     <?php
     include("db.php");
 
-    $selectQuery = "SELECT product_name, category, type, price, quantity, availability, description, image, product_id FROM products WHERE category ='outdoor'";
+    $selectQuery = "SELECT product_name, category, type, price, quantity, description, image, product_id FROM products WHERE category ='outdoor'";
     $result = $conn->query($selectQuery);
 
     if ($result === false) {
@@ -38,8 +38,6 @@
                 echo '<p name="' . $row["price"] . '"><strong>Price:</strong> ' . $row["price"] . '</p>';
                 echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
                 echo '<p><strong>Description:</strong> ' . $row["description"] . '</p>';
-                echo '<button class="btn btn-success view_prod" data-id="' . $row['product_id'] . '">ID Number</button>';
-                echo '<label name="quantity_' . $row['product_id'] . '" id="count-' . $row['product_id'] . '">0</label>';
                 echo '<form method="post" action="add_to_cart.php">'; 
                 echo '<input type="hidden" name="product_id" value="' . $row['product_id'] . '">';
                 echo '<input type="hidden" name="product_name" value="' . $row['product_name'] . '">';
@@ -58,32 +56,6 @@
     $conn->close();
     ?>
 
-    <script>
-        $(document).ready(function() {
-            $('.view_prod').click(function() {
-                var productId = $(this).data('id');
-                var productName = $(this).closest('.product-card').find('h5').text();
-                Swal.fire({
-                    title: productName,
-                    html: '<p><strong>Product ID:</strong> ' + productId + '</p>',
-                    icon: 'info',
-                    confirmButtonText: 'Close'
-                });
-            });
-
-            $(document).on('click', '.qty-minus', function() {
-                var qty = $(this).siblings('label').text();
-                if (qty > 0) {
-                    $(this).siblings('label').text(parseInt(qty) - 1);
-                }
-            });
-
-            $(document).on('click', '.qty-plus', function() {
-                var qty = $(this).siblings('label').text();
-                $(this).siblings('label').text(parseInt(qty) + 1);
-            });
-        });
-    </script>
 
     <?php
     include("footer.php");

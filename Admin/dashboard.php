@@ -1,254 +1,305 @@
 <?php
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location:adminlogin.php");
+    header("Location: adminlogin.php");
     exit;
 }
 $username = $_SESSION['username'];
+include("db.php");
+
+$result = $conn->query("SELECT COUNT(*) AS product_count FROM products");
+$productCount = $result->fetch_assoc()['product_count'];
+
+$result = $conn->query("SELECT COUNT(*) AS order_count FROM orders");
+$orderCount = $result->fetch_assoc()['order_count'];
+
+$result = $conn->query("SELECT COUNT(*) AS register_count FROM register");
+$registerCount = $result->fetch_assoc()['register_count'];
+
+$result = $conn->query("SELECT COUNT(*) AS review_count FROM user_reviews");
+$reviewCount = $result->fetch_assoc()['review_count'];
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Admin</title>
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="css/styles.css" rel="stylesheet" />
-        <style>
-             marquee{
-            color:#272343;
-            font-size:30px;
-            font-weight:bold;
 
-        }
-        *{
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Admin Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Roboto', sans-serif;
         }
-            .col{
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-            .col a{
-                text-decoration:none;
-            }
-        .color-change {
-            animation: changeColor 20s infinite;
-            font-size:25px;
-            font-weight:bold;
-            margin-top:60px;
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
         }
 
-        @keyframes changeColor {
-            0%, 10% {
-                color: red;
+        #sidebar {
+            background-color: #34495e;
+            color: #fff;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            padding: 20px 15px;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sidebar.active {
+            left: -250px;
+        }
+
+        #sidebar .sidebar-header {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        #sidebar ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        #sidebar ul li {
+            padding: 12px 0;
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #sidebar ul li:hover {
+            background-color: #2c3e50;
+        }
+
+        #sidebar ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #main-content {
+            margin-left: 250px;
+            flex-grow: 1;
+            transition: margin-left 0.3s ease;
+            padding: 40px;
+        }
+
+        #main-content.active {
+            margin-left: 0;
+        }
+
+        .sidebar-close {
+        display: none;
+    }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar button {
+            background-color: #34495e;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 4px;
+        }
+
+        .navbar button:hover {
+            background-color: #2c3e50;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .card i {
+            font-size: 25px;
+            color: #fff;
+            background-color: #2ecc71;
+            padding: 15px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        .card h4 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+
+        .counter {
+            font-size: 30px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .card.product-card i {
+            background-color: #3498db;
+        }
+
+        .card.order-card i {
+            background-color: #e74c3c;
+        }
+
+        .card.user-card i {
+            background-color: #2ecc71;
+        }
+
+        .card.review-card i {
+            background-color: #f39c12;
+        }
+
+    
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                width: 100%;
+                top: 0;
+                left: -100%;
+                z-index: 1000;
             }
-            20%, 30% {
-                color: orange;
+
+            #sidebar.active {
+                left: 0;
             }
-            40%, 50% {
-                color: yellow;
+
+            #main-content {
+                margin-left: 0;
             }
-            60%, 70% {
-                color: green;
+
+            .navbar button {
+                display: block;
             }
-            80%, 90% {
-                color: blue;
+
+            .sidebar-close {
+                display:block;
+                font-size: 30px;
+                color: #fff;
+                cursor: pointer;
+                background-color: transparent;
+                border: none;
+                position: absolute;
+                top: 30px;
+                right: 40px;
+                display: none; 
             }
-            100% {
-                color: purple;
+
+            #sidebar.active .sidebar-close {
+                display: block; 
             }
         }
     </style>
-    </head>
-    <body>
-        <div class="d-flex" id="wrapper">
-            <div class="border-end bg-white" id="sidebar-wrapper">
-                <div class="sidebar-heading border-bottom bg-light">Admin Dashboard</div>
-                <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#users">Users</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#products">Products</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#reviews">Reviews</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#sales">Sales</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#pay">Payments</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#orders">Orders</a>
-                  
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="sidebar">
+            <div class="sidebar-header">
+                <button class="sidebar-close" id="sidebarClose"><i class="fa fa-times"></i></button>
+            </div>
+            <ul>
+                <li><a href="users.php">Users</a></li>
+                <li><a href="products.php">Products</a></li>
+                <li><a href="viewreviews.php">Reviews</a></li>
+                <li><a href="orders.php">Orders</a></li>
+                <li><a href="payments.php">Payments</a></li>
+                <li><a href="logout.php">Logout</a></li>
+            </ul>
+        </div>
+        <div id="main-content">
+            <div class="navbar">
+                <button id="sidebarToggle"><i class="fa fa-bars"></i></button>
+            </div>
+            <div class="card-container">
+                <div class="card product-card">
+                    <i class="fa fa-box"></i>
+                    <h4>Products</h4>
+                    <div class="counter"><?php echo $productCount; ?></div>
+                </div>
+                <div class="card order-card">
+                    <i class="fa fa-shopping-cart"></i>
+                    <h4>Orders</h4>
+                    <div class="counter"><?php echo $orderCount; ?></div>
+                </div>
+                <div class="card user-card">
+                    <i class="fa fa-users"></i>
+                    <h4>Users</h4>
+                    <div class="counter"><?php echo $registerCount; ?></div>
+                </div>
+                <div class="card review-card">
+                    <i class="fa fa-comments"></i>
+                    <h4>Reviews</h4>
+                    <div class="counter"><?php echo $reviewCount; ?></div>
                 </div>
             </div>
-            <div id="page-content-wrapper">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-                    <div class="container-fluid">
-                        <button class="btn btn-primary" id="sidebarToggle"> Menu</button>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                                <li class="nav-item"><a class="nav-link" href="./adminlogin.php">Logout</a></li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#!">Edit Profile</a>
-                                        <a class="dropdown-item" href="#!"></a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="./adminlogin.php">Logout</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-               <marquee behavior="scroll" direction="left" class="color-change">Users Information</marquee>
-
-                <section id="users">
-                <?php
-include("db.php");
-
-$query = "SELECT * FROM register";
-$result = $conn->query($query);
-
-if ($result->num_rows > 0) {
-    echo "<div class='container'>";
-    echo "<table class='table table-bordered'>";
-    echo "<thead class='thead-dark'><tr><th>S.No</th><th>Username</th><th>Email</th><th>Address</th><th>Action</th></tr></thead><tbody>";
-
-
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>" . $row["id"] . "</td>";
-        echo "<td>" . $row["Username"] . "</td>";
-        echo "<td>" . $row["email"] . "</td>";
-        echo "<td>" . $row["address"] . "</td>";
-        echo "<td>
-                <button class='btn btn-danger btn-sm' onclick='deleteUser(" . $row["id"] . ")'>Delete</button>
-              </td>";
-        echo "</tr>";
-    }
-
-    echo "</tbody></table>";
-    echo "</div>";
-} else {
-    $query = "SELECT * FROM register";
-    $result = $conn->query($query);
-    
-    echo "<div class='container'>";
-    echo "<table class='table table-bordered'>";
-    echo "<thead class='thead-dark'><tr><th>S.No</th><th>Username</th><th>Email</th><th>Address</th><th>Action</th></tr></thead><tbody>";
-    
-    
-    
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . $row['id']. "</td>";
-            echo "<td>" . $row["Username"] . "</td>";
-            echo "<td>" . $row["email"] . "</td>";
-            echo "<td>" . $row["address"] . "</td>";
-            echo "<td>
-                    <button class='btn btn-danger btn-sm' onclick='deleteUser(" . $row["id"] . ")'>Delete</button>
-                  </td>";
-            echo "</tr>";
-    
-        
-        }
-    } else {
-        echo "<tr><td colspan='5'>No users available</td></tr>";
-    }
-    
-    echo "</tbody></table>";
-    echo "</div>";
-    
-    $conn->close();
-}
-
-?>
-                </section>
-
-
-                <marquee behavior="scroll" direction="left" class="color-change">Products</marquee>
-
-
-
-                <section id="products">
-                   <?php
-                   include("db.php");
-                   ?>
-                   <?php
-   include("viewproducts.php");
-  ?>
-                    <div class="container">
-                    <div class="row">
-    <div class="col">
-        <a href="addproducts.php"><i class="fas fa-plus-circle"></i> 
-        Add</a>
-    </div>
-    <div class="col">
-        <a href="deleteproducts.php"><i class="fas fa-trash-alt"></i>
-        Delete</a>
-    </div>
-    <div class="col">
-       <a href="updateproduct.php"><i class="fas fa-edit"></i>
-        Update</a> 
-    </div>
-    <div class="col">
-       <a href="view.php"><i class="fas fa-eye"></i>
-        View</a> 
-    </div>
-</div>
-
-                </section>
-
-
-  <marquee behavior="scroll" direction="left" class="color-change">Reviews</marquee>
-
-  <section id="reviews">
-    <?php
-     include("viewreviews.php");
-    ?>
-  </section>
-
-
-
-  <marquee behavior="scroll" direction="left" class="color-change">Sales</marquee>
-  <section id="sales">
-    <?php
-     include("sales.php");
-    ?>
-  </section>
-
-
-  <marquee behavior="scroll" direction="left" class="color-change">Payments</marquee>
-  <section id="pay">
-    <?php
-     include("viewpay.php");
-    ?>
-  </section>
-  
-
-  <marquee behavior="scroll" direction="left" class="color-change">Orders</marquee>
-<section  id="orders">
-<?php
-include("orders.php");
-?>
-</section><br><br>
-
-
-            </div>
         </div>
-       
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="js/scripts.js">
-        </script>
-        <script>
-    function deleteUser(userId) {
-        if (confirm("Are you sure you want to delete this user?")) {
-            window.location.href = "delete.php?delete_user=" + userId;
-        }
-    }
-</script>
+    </div>
 
-        
-    </body>
+    <script>
+        const sidebarToggle = document.getElementById("sidebarToggle");
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("main-content");
+        const sidebarClose = document.getElementById("sidebarClose");
+
+        sidebarToggle.addEventListener("click", function () {
+            sidebar.classList.toggle("active");
+            mainContent.classList.toggle("active");
+        });
+
+        sidebarClose.addEventListener("click", function () {
+            sidebar.classList.remove("active");
+            mainContent.classList.remove("active");
+        });
+    </script>
+</body>
+
 </html>
+
