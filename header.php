@@ -35,10 +35,7 @@ $userID = $_SESSION["user_id"];
   box-sizing: border-box;
 }
 
-/* body {
-  font-family: "Poppins", sans-serif;
-  overflow: hidden;
-} */
+
 
 ul {
   list-style: none;
@@ -60,8 +57,7 @@ section {
   position: relative;
   height: calc(40vh - 3rem);
   width: 100%;
-  /* background: url("https://i.postimg.cc/TPn6kNJ2/bg.jpg") no-repeat top center /   cover/; */
-  overflow: hidden;
+   overflow: hidden;
 }
 
 .overlay {
@@ -70,7 +66,6 @@ section {
   height: 100%;
   top: 0;
   left: 0;
-  /* background-color: rgba(30, 130, 95, 0.5); */
 }
 
 .container {
@@ -481,18 +476,6 @@ section {
  </style>
   <script src="https://kit.fontawesome.com/3b161c540c.js" crossorigin="anonymous"></script>
 </head>
-<?php
-
-  //error_reporting(0);
- // session_start();
-// $username = null;
-// if (isset($_SESSION["username"])) {
-//     // Retrieve the username
-//      $username = $_SESSION["username"];
-//     echo "value set successfully";
-    
-// }else echo "Value not setted"
-// ?>
 
 <body>
   <header>

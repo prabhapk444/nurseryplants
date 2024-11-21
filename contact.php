@@ -135,8 +135,6 @@
      <input type="email" id="email" name="email" required class="input">
      <label for="number" class="label">Number</label>
      <input type="number" id="number" name="number" required class="input">
-     <label for="address" class="label">address</label>
-     <input type="text" id="address" name="address" required class="input">
      <label for="message" class="label">Message</label>
      <textarea name="message" id="message" cols="30" rows="10"></textarea><br>
      <input type="submit" class="submit">

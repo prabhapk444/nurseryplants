@@ -8,7 +8,6 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f4f6f9;
             margin: 0;
             padding: 0;
         }
@@ -84,8 +83,8 @@
         }
     </style>
 </head>
-<body>
-
+<body><br>
+<center><h2>User Reviews</h2></center>
 <?php
 include("db.php");
     $selectQuery = "SELECT id, name, email, command, ratings, created_at FROM user_reviews";

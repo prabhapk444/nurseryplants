@@ -29,6 +29,7 @@ $reviewCount = $result->fetch_assoc()['review_count'];
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -250,8 +251,7 @@ $reviewCount = $result->fetch_assoc()['review_count'];
                 <li><a href="addproducts.php">Products</a></li>
                 <li><a href="viewreviews.php">Reviews</a></li>
                 <li><a href="orders.php">Orders</a></li>
-                <li><a href="payments.php">Payments</a></li>
-                <li><a href="logout.php">Logout</a></li>
+                <li><a href="#" onclick="confirmLogout()">Logout</a></li>
             </ul>
         </div>
         <div id="main-content">
@@ -298,6 +298,24 @@ $reviewCount = $result->fetch_assoc()['review_count'];
             sidebar.classList.remove("active");
             mainContent.classList.remove("active");
         });
+
+        function confirmLogout() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to log out!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, log me out!',
+        cancelButtonText: 'No, keep me logged in!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'logout.php';
+        }
+    });
+}
+
+
     </script>
 </body>
 

@@ -48,7 +48,7 @@
       <div class="accordion-body" style="text-align:justiy;">Your Cashback Voucher/Cashback Coupon will be redeemed as n-cash in your nurserylive wallet.
 Also, you will be notified via email for the same.</div>
     </div>
-  </div>
+  </div><br>
   <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingTwo">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
@@ -60,7 +60,7 @@ Also, you will be notified via email for the same.</div>
     <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body" style="text-align:justify;">We currently do not support cash on delivery. However, we do support a variety of payment options including wallet, credit, and debit cards.</div>
     </div>
-  </div>
+  </div><br>
   <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingThree">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
@@ -75,7 +75,7 @@ Also, you will be notified via email for the same.</div>
     * After login, you will be displayed with your account balance, ways to redeem and ways to earn, and more.</div>
     </div>
   </div>
-</div>
+</div><br>
 </body>
 <?php
 include("footer.php");

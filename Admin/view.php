@@ -30,24 +30,6 @@
             letter-spacing: 1.2px;
         }
 
-        .search-bar {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .search-bar input {
-            width: 50%;
-            padding: 12px 20px;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            outline: none;
-            font-size: 16px;
-            transition: box-shadow 0.3s;
-        }
-
-        .search-bar input:focus {
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
-        }
 
         .product-list {
             display: grid;
@@ -71,14 +53,14 @@
             display: none !important;
         }
 
-
         .product-image {
-            max-width: 100%;
-            height: 200px;
-            border-radius: 8px;
-            object-fit: cover;
-            margin-bottom: 15px;
-        }
+    max-width: 100%;
+    max-height: 200px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
 
         .product-details {
             margin-bottom: 15px;
@@ -87,13 +69,13 @@
         .product-details h5 {
             color: #007bff;
             margin-bottom: 10px;
-            font-size: 20px;
+            font-size: 24px;
         }
 
         .product-details p {
             margin: 8px 0;
             color: #555;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .delete-btn {
@@ -115,11 +97,7 @@
             transform: scale(1.05);
         }
 
-        @media (max-width: 768px) {
-            .search-bar input {
-                width: 80%;
-            }
-        }
+       
     </style>
 </head>
 
@@ -127,10 +105,7 @@
     <div class="container">
         <h2>Product List</h2>
 
-        <div class="search-bar">
-            <input type="text" id="search" placeholder="Search products..." onkeyup="filterProducts()">
-        </div>
-
+        
         <div class="product-list" id="product-list">
             <?php
             include("db.php");
@@ -149,7 +124,7 @@
                         echo '<h5>' . $row["product_name"] . '</h5>';
                         echo '<p><strong>Category:</strong> ' . $row["category"] . '</p>';
                         echo '<p><strong>Type:</strong> ' . $row["type"] . '</p>';
-                        echo '<p><strong>Price:</strong> ₹' . $row["price"] . '</p>';
+                        echo '<p><strong>Price:</strong> ' . $row["price"] . '</p>';
                         echo '<p><strong>Quantity:</strong> ' . $row["quantity"] . '</p>';
                         echo '<p><strong>Description:</strong> ' . $row["description"] . '</p>';
                         echo '</div>';
@@ -167,19 +142,7 @@
     </div>
 
     <script>
-        function filterProducts() {
-            const searchInput = document.getElementById("search").value.toLowerCase();
-            const products = document.getElementsByClassName("product-card");
 
-            for (let i = 0; i < products.length; i++) {
-                const productName = products[i].querySelector(".product-details h5").textContent.toLowerCase();
-                if (productName.includes(searchInput)) {
-                    products[i].classList.remove("hidden");
-                } else {
-                    products[i].classList.add("hidden");
-                }
-            }
-        }
 
         function deleteProduct(productId) {
             if (confirm("Are you sure you want to delete this product?")) {
