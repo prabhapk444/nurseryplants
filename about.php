@@ -45,17 +45,7 @@
 <div class="container">
   <div class="row">
     <div class="col" data-aos="fade-up">
-    nurseryplant germinated in 2014 from a promise to make ‘green and healthy’ a click away for all Indians
-
-Having plants in our homes or in our offices doesn’t just look good, it also boosts our mood, makes us more productive, and cleans the air around us by absorbing toxins
-
-Most of us being urban dwellers spending their days in apartments with limited access to parks and ecological reserves, have no way of feeling close to nature and experiencing the benefits of being around plants.
-
-Ordering a pizza is easy but ever heard of ordering a plant to your doorstep? This is where nurseryplant comes in.
-
-We believe that Green is Good and are here to enable Indians to access plants in the easiest way possible – online! We are here to shape the future of gardening!
-
-A one-stop-shop for all gardening related requirements, nurseryplant has more than 6000 products available online for delivery across India saving you numerous messy trips to various nurseries.
+   nurseryplant has more than 6000 products available online for delivery across India saving you numerous messy trips to various nurseries.
 
 We cater to all kinds of gardening needs ranging from plants, pots, tools, to curated plant-scaping solutions. Our ever-growing platform integrates nurseries and customers across India. 
 

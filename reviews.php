@@ -166,9 +166,6 @@
     ?>
 
     <h1>Product Review</h1>
-    <center>
-        <h2>Nursery Plant</h2>
-    </center>
 
     <div class="video-container">
         <iframe src="./images/nurserylive.mp4" frameborder="0" allowfullscreen></iframe>
